@@ -21,7 +21,7 @@ const APP_VERSION string = "1.0.0"
 var (
 	inputFilePath = kingpin.Flag("input", "Input file containing the data").Short('i').Required().String()
 	outputPath = kingpin.Flag("output", "Output path (directory) for results").Short('o').Required().String()
-	uniqued    = kingpin.Flag("uniqued", "Output a unique list. Will hold list in memory whilst processing").Default("false").Bool()
+	uniqued    = kingpin.Flag("uniqued", "Output a unique list. Will hold list in memory whilst processing").Default("true").Bool()
 )
 
 var (
