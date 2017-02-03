@@ -3,12 +3,12 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"os"
-	"strings"
-	"gopkg.in/alecthomas/kingpin.v2"
 	"golang.org/x/net/publicsuffix"
+	"gopkg.in/alecthomas/kingpin.v2"
 	"net"
+	"os"
 	"path"
+	"strings"
 )
 
 // ##### Constants ###########################################################
@@ -20,19 +20,19 @@ const APP_VERSION string = "1.0.0"
 
 var (
 	inputFilePath = kingpin.Flag("input", "Input file containing the data").Short('i').Required().String()
-	outputPath = kingpin.Flag("output", "Output path (directory) for results").Short('o').Required().String()
-	uniqued    = kingpin.Flag("uniqued", "Output a unique list. Will hold list in memory whilst processing").Default("true").Bool()
+	outputPath    = kingpin.Flag("output", "Output path (directory) for results").Short('o').Required().String()
+	uniqued       = kingpin.Flag("uniqued", "Output a unique list. Will hold list in memory whilst processing").Default("true").Bool()
 )
 
 var (
 	domains map[string]bool
-	ips map[string]bool
-	domain string
-	line string
+	ips     map[string]bool
+	domain  string
+	line    string
 	indexOf int
-	icann bool
-	ps string
-	ipV4 net.IP
+	icann   bool
+	ps      string
+	ipV4    net.IP
 )
 
 // ##### Methods #############################################################
@@ -143,7 +143,7 @@ func main() {
 }
 
 //
-func processProtocolLine(line string, protocolPrefix string, protocolPrefixLength int, uniqued bool) (bool, string){
+func processProtocolLine(line string, protocolPrefix string, protocolPrefixLength int, uniqued bool) (bool, string) {
 
 	indexOf = strings.Index(line, protocolPrefix)
 	if indexOf > -1 {
@@ -181,7 +181,7 @@ func processProtocolLine(line string, protocolPrefix string, protocolPrefixLengt
 }
 
 //
-func processBasicLine(line string, uniqued bool) (bool, string){
+func processBasicLine(line string, uniqued bool) (bool, string) {
 
 	ps, icann = publicsuffix.PublicSuffix(line)
 	if icann == false {
@@ -204,7 +204,7 @@ func processBasicLine(line string, uniqued bool) (bool, string){
 }
 
 //
-func processIpLine(line string, uniqued bool) (bool, string){
+func processIpLine(line string, uniqued bool) (bool, string) {
 
 	ipV4 = net.ParseIP(line)
 	if ipV4.To16() != nil {
