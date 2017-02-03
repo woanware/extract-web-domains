@@ -21,7 +21,7 @@ const APP_VERSION string = "1.0.0"
 var (
 	inputFilePath = kingpin.Flag("input", "Input file containing the data").Short('i').Required().String()
 	outputPath = kingpin.Flag("output", "Output path (directory) for results").Short('o').Required().String()
-	uniqued    = kingpin.Flag("uniqued", "Output a unique list. Will hold list in memory whilst processing").Bool()
+	uniqued    = kingpin.Flag("uniqued", "Output a unique list. Will hold list in memory whilst processing").Default("false").Bool()
 )
 
 var (
@@ -30,6 +30,8 @@ var (
 	domain string
 	line string
 	indexOf int
+	icann bool
+	ps string
 	ipV4 net.IP
 )
 
@@ -157,11 +159,22 @@ func processProtocolLine(line string, protocolPrefix string, protocolPrefixLengt
 			line = line[0:indexOf]
 		}
 
-		if uniqued == true {
-			domains[line] = true
-		}
+		ps, icann = publicsuffix.PublicSuffix(line)
+		if icann == false {
+			if strings.Contains(ps, ".") == true {
+				if uniqued == true {
+					domains[line] = true
+				}
 
-		return true, line
+				return true, line
+			}
+		} else {
+			if uniqued == true {
+				domains[line] = true
+			}
+
+			return true, line
+		}
 	}
 
 	return false, ""
@@ -170,8 +183,7 @@ func processProtocolLine(line string, protocolPrefix string, protocolPrefixLengt
 //
 func processBasicLine(line string, uniqued bool) (bool, string){
 
-	ps, icann := publicsuffix.PublicSuffix(line)
-
+	ps, icann = publicsuffix.PublicSuffix(line)
 	if icann == false {
 		if strings.Contains(ps, ".") == true {
 			if uniqued == true {
